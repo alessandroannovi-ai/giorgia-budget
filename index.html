@@ -188,11 +188,11 @@ button,input,select,textarea{font-family:inherit;-webkit-appearance:none;appeara
     <div id="ph">
       <div class="hero">
         <div class="hero-name">Ciao Giorgia 👋</div>
-        <div class="hero-amount" id="hero-amt">€ 0</div>
-        <div class="hero-sub" id="hero-sub">spese questo mese</div>
+        <div class="hero-amount" id="hero-saldo">€ 0</div>
+        <div class="hero-sub">saldo del mese</div>
         <div class="hero-delta">
-          <div><div class="hero-delta-lbl">Entrate mese</div><div class="hero-delta-val" id="hero-inc">€ 0</div></div>
-          <div style="text-align:right"><div class="hero-delta-lbl">Saldo</div><div class="hero-delta-val" id="hero-saldo">€ 0</div></div>
+          <div><div class="hero-delta-lbl">Entrate</div><div class="hero-delta-val" id="hero-inc">€ 0</div></div>
+          <div style="text-align:right"><div class="hero-delta-lbl">Uscite</div><div class="hero-delta-val" id="hero-amt">€ 0</div></div>
         </div>
       </div>
       <div class="mnav">
@@ -397,10 +397,9 @@ function rHome(){
   const ep=tp.filter(t=>t.type==='expense').reduce((s,t)=>s+t.amount,0);
   const inc=tc.filter(t=>t.type==='income').reduce((s,t)=>s+t.amount,0);
   const saldo=inc-ec;
-  q('hero-amt').textContent='€ '+Math.round(ec).toLocaleString('it-IT');
-  q('hero-sub').textContent=tc.filter(t=>t.type==='expense').length+' spese questo mese';
-  q('hero-inc').textContent='€ '+Math.round(inc).toLocaleString('it-IT');
   q('hero-saldo').textContent=(saldo>=0?'+ ':'− ')+'€ '+Math.abs(Math.round(saldo)).toLocaleString('it-IT');
+  q('hero-inc').textContent='€ '+Math.round(inc).toLocaleString('it-IT');
+  q('hero-amt').textContent='€ '+Math.round(ec).toLocaleString('it-IT');
   let dh='—',ds='';
   if(ep>0){const p=Math.round(((ec-ep)/ep)*100),col=p>0?'var(--red)':'var(--teal)',ar=p>0?'▲':'▼';dh=`<span style="color:${col}">${ar} ${Math.abs(p)}%</span>`;ds='vs €'+Math.round(ep).toLocaleString('it-IT');}
   q('kd').innerHTML=dh;q('kds').textContent=ds;
@@ -648,6 +647,9 @@ window.addEventListener('load',function(){
   q('imp-drop').addEventListener('click',()=>q('imp-file').click());
   q('imp-file').addEventListener('change',function(){if(this.files[0])importCSV(this.files[0])});
   goPage('home');
+  document.addEventListener('visibilitychange',function(){
+    if(document.visibilityState==='visible')applyRecurring();
+  });
 });
 </script>
 </body>
